@@ -7,7 +7,6 @@ import configuration as confi
 import landingScreen as Ls
 import showSudoko as Ss
 
-
 screen = pygame.display.set_mode((confi.screen_width, confi.screen_height))
 pygame.display.set_caption("sudoku solver")
 

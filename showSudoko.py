@@ -20,13 +20,30 @@ def draw_rounded_rect(surface, color, rect, corner_radius):
 
 upload_button = pygame.Rect(confi.ssbutton_x, confi.ssbutton_y, confi.ssbutton_width, confi.ssbutton_height)
 def handle_landingScreen_events(events, screen):
-    pass
+    mouse_pos = pygame.mouse.get_pos()
+    for event in events:
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if upload_button.collidepoint(mouse_pos):  # Check if the button was clicked
+               print("clicked")
+    # screen.blit(button_text, (confi.lsbutton_x + 10, confi.lsbutton_y + 10))
+    return "show sudoku"
 
 def draw_showSudoku_Screen(screen):
-    output_image_rgb = Ip.imageProcessing(confi.file_path)
-    output_image_rgb = np.array(output_image_rgb)
-    output_image_rgb = np.transpose(output_image_rgb, (1, 0, 2))  # Swap axes if needed
-    surface = pygame.surfarray.make_surface(output_image_rgb)
+    screen.fill(confi.background)
+    if len(confi.sudoku_board) == 1:
+        output_image_rgb = Ip.imageProcessing(confi.file_path)
+        output_image_rgb = np.array(output_image_rgb)
+        output_image_rgb = np.transpose(output_image_rgb, (1, 0, 2))  # Swap axes if needed
+        confi.output_image_rgb = output_image_rgb
 
-    screen.blit(surface, (0, 0))
+    surface = pygame.surfarray.make_surface(confi.output_image_rgb)
+    screen.blit(surface, (30, 30))
+
+    mouse_pos = pygame.mouse.get_pos()
+    if upload_button.collidepoint(mouse_pos):
+        draw_rounded_rect(screen, confi.button_hover_color, upload_button, 15)  # Radius 15 for rounded corners
+    else:
+        draw_rounded_rect(screen, confi.button_color, upload_button, 15)
+
+
 

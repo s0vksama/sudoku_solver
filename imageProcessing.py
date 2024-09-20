@@ -91,6 +91,4 @@ def imageProcessing(path):
 
     confi.sudoku_board = sudoku_grid
     return output_image_rgb
-    # # Print or display the Sudoku matrix
-    # print("Sudoku Grid:")
-    # print(sudoku_grid)
+
