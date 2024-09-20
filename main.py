@@ -5,6 +5,7 @@ pygame.init()
 import sys
 import configuration as confi
 import landingScreen as Ls
+import showSudoko as Ss
 
 screen = pygame.display.set_mode((confi.screen_width, confi.screen_height))
 pygame.display.set_caption("sudoku solver")
@@ -24,7 +25,8 @@ def main():
             Ls.draw_landingScreen(screen)
 
         elif current_screen == "show sudoku":
-            pass
+            current_screen = Ss.handle_landingScreen_events(events, screen)
+            Ss.draw_showSudoku_Screen(screen)
 
         elif current_screen == "animation":
             pass

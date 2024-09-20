@@ -66,7 +66,9 @@ def handle_landingScreen_events(events, screen):
                     filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp *.gif")]
                 )
                 if file_path:
-                    uploaded_image = load_image(file_path)
+                    confi.uploaded_image = load_image(file_path)
+
+                return "show sudoku"
 
 
     return "landing screen"

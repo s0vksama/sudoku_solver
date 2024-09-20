@@ -14,3 +14,5 @@ font_color = (240, 101, 49)
 button_color = (58, 62, 62)
 button_hover_color = (49, 83, 65)
 BLACK = (0,0,0)
+
+uploaded_image = None
