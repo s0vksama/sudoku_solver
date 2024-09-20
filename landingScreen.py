@@ -14,12 +14,22 @@ root.withdraw()
 # Define the button's rectangle (position and size)
 upload_button = pygame.Rect(confi.lsbutton_x, confi.lsbutton_y, confi.lsbutton_width, confi.lsbutton_height)
 
+def draw_rounded_rect(surface, color, rect, corner_radius):
+    # Create a surface with transparency (using SRCALPHA)
+    rounded_rect_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
+
+    # Draw a filled rounded rectangle on this surface
+    pygame.draw.rect(rounded_rect_surface, color, rounded_rect_surface.get_rect(), border_radius=corner_radius)
+
+    # Blit the surface onto the main screen at the specified location
+    surface.blit(rounded_rect_surface, rect.topleft)
+
 # Function to load an image from a file path
 def load_image(file_path):
     if os.path.exists(file_path):
         try:
             image = pygame.image.load(file_path)
-            return pygame.transform.scale(image, (win_width, win_height))
+            return pygame.transform.scale(image, (confi.screen_width, confi.screen_height))
         except pygame.error as e:
             print(f"Cannot load image: {e}")
     else:
@@ -32,8 +42,15 @@ def draw_landingScreen(screen):
     screen.blit(text, (50, 50))  # Display the text at (50, 50)
 
     # Draw the button (as a filled rectangle)
-    pygame.draw.rect(screen, (100, 100, 250), upload_button)  # Button color
+    pygame.draw.rect(screen, confi.button_color, upload_button)  # Button color
     button_text = font.render("Upload Puzzle", True, confi.font_color)
+
+    mouse_pos = pygame.mouse.get_pos()
+    if upload_button.collidepoint(mouse_pos):
+        draw_rounded_rect(screen, confi.button_hover_color, upload_button, 15)  # Radius 15 for rounded corners
+    else:
+        draw_rounded_rect(screen, confi.button_color, upload_button, 15)
+
     screen.blit(button_text, (confi.lsbutton_x + 10, confi.lsbutton_y + 10))  # Draw the button text
 
 def handle_landingScreen_events(events, screen):
