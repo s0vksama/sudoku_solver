@@ -21,7 +21,7 @@ sudoku_board = [0]
 output_image_rgb = None
 
 
-ssbutton_width = 300
+ssbutton_width = 100
 ssbutton_height = 50
-ssbutton_x = (screen_width-lsbutton_width)//2
+ssbutton_x = (screen_width-ssbutton_width)//2
 ssbutton_y = 600

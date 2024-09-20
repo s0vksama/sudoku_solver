@@ -6,7 +6,7 @@ import numpy as np
 import imageProcessing as Ip
 
 pygame.init()
-font = pygame.font.SysFont(None, 55)
+font = pygame.font.SysFont(None, 40)
 
 def draw_rounded_rect(surface, color, rect, corner_radius):
     # Create a surface with transparency (using SRCALPHA)
@@ -41,8 +41,10 @@ def draw_showSudoku_Screen(screen):
     surface = pygame.transform.scale(surface, (500, 500))
     screen.blit(surface, (50, 50))
 
+    button_text = font.render("Next", True, confi.font_color)
     mouse_pos = pygame.mouse.get_pos()
     if upload_button.collidepoint(mouse_pos):
         draw_rounded_rect(screen, confi.button_hover_color, upload_button, 15)  # Radius 15 for rounded corners
     else:
         draw_rounded_rect(screen, confi.button_color, upload_button, 15)
+    screen.blit(button_text, (confi.ssbutton_x+20, confi.ssbutton_y+10))
