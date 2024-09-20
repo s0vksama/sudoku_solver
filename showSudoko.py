@@ -25,7 +25,7 @@ def handle_landingScreen_events(events, screen):
     for event in events:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if upload_button.collidepoint(mouse_pos):  # Check if the button was clicked
-               print("clicked")
+               return "show sudoku2"
     # screen.blit(button_text, (confi.lsbutton_x + 10, confi.lsbutton_y + 10))
     return "show sudoku"
 
