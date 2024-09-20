@@ -19,6 +19,7 @@ def draw_rounded_rect(surface, color, rect, corner_radius):
     surface.blit(rounded_rect_surface, rect.topleft)
 
 upload_button = pygame.Rect(confi.ssbutton_x, confi.ssbutton_y, confi.ssbutton_width, confi.ssbutton_height)
+
 def handle_landingScreen_events(events, screen):
     mouse_pos = pygame.mouse.get_pos()
     for event in events:
@@ -37,13 +38,11 @@ def draw_showSudoku_Screen(screen):
         confi.output_image_rgb = output_image_rgb
 
     surface = pygame.surfarray.make_surface(confi.output_image_rgb)
-    screen.blit(surface, (30, 30))
+    surface = pygame.transform.scale(surface, (500, 500))
+    screen.blit(surface, (50, 50))
 
     mouse_pos = pygame.mouse.get_pos()
     if upload_button.collidepoint(mouse_pos):
         draw_rounded_rect(screen, confi.button_hover_color, upload_button, 15)  # Radius 15 for rounded corners
     else:
         draw_rounded_rect(screen, confi.button_color, upload_button, 15)
-
-
-
