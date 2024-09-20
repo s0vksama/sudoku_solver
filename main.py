@@ -1,42 +1,36 @@
-# importing library
-import os
+
 import pygame
-import tkinter as tk
-from tkinter import filedialog
-
-# importing files
-import landingPage as lp
-import configuration as confi
-
-# Initialize pygame
 pygame.init()
 
-# Fonts
-font = pygame.font.SysFont(None, 36)
+import sys
+import configuration as confi
 
-# Create a tkinter root window and hide it
-root = tk.Tk()
-root.withdraw()
+screen = pygame.display.set_mode((confi.screen_width, confi.screen_height))
+pygame.display.set_caption("sudoku solver")
 
-window = pygame.display.set_mode((confi.screen_width, confi.screen_height))
-pygame.display.set_caption('Image Uploader')
+def main():
+    current_screen = "landing screen"
+
+    while  True:
+        events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        if current_screen == "landing screen":
+            pass
+
+        elif current_screen == "show sudoku":
+            pass
+
+        elif current_screen == "animation":
+            pass
+
+        elif current_screen == "go back":
+            pass
 
 
-# Main loop
-running = True
-uploaded_image = None
+if __name__ == "__main__":
+    main()
 
-# deciding which frame to render
-landing_status = True
-Sudoku_viewer = False
-Animation = False
-Result = False
-
-while running:
-    window.fill(confi.WHITE)
-
-    if landing_status == True:
-        lp.landing_page_func(window)
-
-# Quit pygame
-pygame.quit()
