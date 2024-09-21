@@ -5,6 +5,7 @@ import sys
 import configuration as confi
 import landingScreen as Ls
 import showSudoko as Ss
+import animation as ani
 import numpy as np
 import showSudoko2 as Ss2
 
@@ -34,7 +35,8 @@ def main():
             Ss2.draw_showSudoku_Screen(screen)
 
         elif current_screen == "animation":
-            pass
+            current_screen = ani.handle_landingScreen_events(events, screen)
+            ani.draw_showSudoku_Screen(screen)
 
         elif current_screen == "go back":
             pass

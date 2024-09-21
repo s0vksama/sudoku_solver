@@ -108,7 +108,13 @@ def draw_board(screen, selected_cell=None, k=[]):
     screen.blit(stop_button_text_surface, stop_button_text_rect)
 
 def handle_landingScreen_events(events, screen):
-    pass
+    mouse_pos = pygame.mouse.get_pos()
+    for event in events:
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if button_rect.collidepoint(mouse_pos):  # Check if the button was clicked
+               return "animation"
+    # screen.blit(button_text, (confi.lsbutton_x + 10, confi.lsbutton_y + 10))
+    return "show sudoku2"
 
 def draw_showSudoku_Screen(screen):
     screen.fill(config.background)
