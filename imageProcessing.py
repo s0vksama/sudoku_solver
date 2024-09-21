@@ -88,7 +88,7 @@ def imageProcessing(path):
     # plt.title('Detected Numbers with Rectangles')
     # plt.axis('off')
     # plt.show()
-
     confi.sudoku_board = sudoku_grid
+    print(confi.sudoku_board)
     return output_image_rgb
 
