@@ -11,7 +11,9 @@ def print_board(Board):
     for b in Board:
         print(b)
 
-priority = {}
+def animate(row, col, num):
+    print(row, col, num)
+
 def possibility_cell(row, col, Board):
     x = list(range(1, 10))
     for k in range(9):
@@ -43,6 +45,8 @@ def possibility_mat(Board, poss_mat):
         for j in range(9):
             if Board[i][j] == 0 or type(Board[i][j]) != int:
                 poss_mat[i][j], flag = possibility_cell(i, j, Board)
+                if flag == True:
+                    animate(i, j, poss_mat[i][j])
                 flag1 = flag1 +flag
 
     if flag1 >=1:
