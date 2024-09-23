@@ -5,7 +5,7 @@ import numpy as np
 
 import imageProcessing as Ip
 
-Board = config.sudoku_board1
+Board = config.sudoku_board3
 
 def print_board(Board):
     for b in Board:
@@ -33,21 +33,25 @@ def possibility_cell(row, col, Board):
             if Board[r][c] in x:
                 x.remove(Board[r][c])
     if len(x) == 1:
-        return x[0]
+        return x[0], True
     else:
-        return x
+        return x, False
 
 def possibility_mat(Board, poss_mat):
+    flag1 = False
     for i in range(9):
         for j in range(9):
-            if Board[i][j] == 0 or Board[i][j] is not int:
-                poss_mat[i][j] = possibility_cell(i, j, Board)
+            if Board[i][j] == 0 or type(Board[i][j]) != int:
+                poss_mat[i][j], flag = possibility_cell(i, j, Board)
+                flag1 = flag1 +flag
 
+    if flag1 >=1:
+        poss_mat = possibility_mat(poss_mat, poss_mat)
     return poss_mat
 
 poss_mat = Board
 print_board(Board)
 poss_mat = possibility_mat(Board, poss_mat)
 
+# backtrack_warking
 print_board(poss_mat)
-
