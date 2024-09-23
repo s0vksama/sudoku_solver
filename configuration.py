@@ -66,3 +66,5 @@ stop_button_x = button_x
 stop_button_y = button_y  # Place it just above the "Solve" button
 
 solved_set = set()
+
+delay = 0.05 #animation delay
