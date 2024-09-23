@@ -216,11 +216,13 @@ def obvious(screen):
                 # Start with all possible numbers 1-9
                 x = list(range(1, 10))
 
-                # Remove numbers from the same column
+
                 for k in range(9):
+                    # Remove numbers from the same column
                     if config.sudoku_board[k][col] in x:
                         x.remove(config.sudoku_board[k][col])
 
+                    # Remove numbers from the same row
                     if config.sudoku_board[row][k] in x:
                         x.remove(config.sudoku_board[row][k])
 
