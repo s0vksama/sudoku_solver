@@ -1,22 +1,36 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-import pytesseract
 import configuration as confi
 
-SUDOKU = [[0 for _ in range(9)] for _ in range(9)]
+def extract_grid_lines(thresh_image):
+    # Define kernels for extracting horizontal and vertical lines
+    horizontal_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (40, 1))  # (40,1) for horizontal lines
+    vertical_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 40))  # (1,40) for vertical lines
 
-def get_sudoku_size(thresh_image):
-    contours, _ = cv2.findContours(thresh_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # Detect horizontal lines
+    horizontal_lines = cv2.erode(thresh_image, horizontal_kernel, iterations=2)
+    horizontal_lines = cv2.dilate(horizontal_lines, horizontal_kernel, iterations=3)
 
-    # Sort contours by area and get the largest one (which should be the Sudoku grid)
-    contours = sorted(contours, key=cv2.contourArea, reverse=True)
-    sudoku_contour = contours[0]
+    # Detect vertical lines
+    vertical_lines = cv2.erode(thresh_image, vertical_kernel, iterations=2)
+    vertical_lines = cv2.dilate(vertical_lines, vertical_kernel, iterations=3)
 
-    # Get the bounding box of the largest contour
-    x, y, w, h = cv2.boundingRect(sudoku_contour)
-    print(x,y)
-    return x, y, w, h
+    # Combine horizontal and vertical lines
+    grid_lines = cv2.add(horizontal_lines, vertical_lines)
+
+    # Remove small components (numbers or noise) using connected components analysis
+    num_labels, labels_im, stats, centroids = cv2.connectedComponentsWithStats(grid_lines, connectivity=8)
+
+    # Filter components based on size (removing small numbers)
+    min_line_length = 50  # Minimum size of a line to keep (adjust as needed)
+    filtered_grid = np.zeros_like(grid_lines)
+
+    for i in range(1, num_labels):  # Skip background (label 0)
+        if stats[i, cv2.CC_STAT_HEIGHT] > min_line_length or stats[i, cv2.CC_STAT_WIDTH] > min_line_length:
+            filtered_grid[labels_im == i] = 255
+
+    return filtered_grid
 
 def image_processing(image_path):
     # Load the image
@@ -35,35 +49,13 @@ def image_processing(image_path):
     # Invert the image to make the grid lines white
     thresh = cv2.bitwise_not(thresh)
 
-    # Get the size of the Sudoku grid
-    x, y, board_length, board_height = get_sudoku_size(thresh)
-    box_length, box_height = board_length // 9, board_height // 9
+    # Extract only the grid lines
+    grid_lines = extract_grid_lines(thresh)
 
-    # Extract each of the 9x9 blocks
-    box_images = []
-    for i in range(9):
-        for j in range(9):
-            # Define the current block
-            r_start = i * box_length + y
-            r_end = (i + 1) * box_length + y
-
-            c_start = j * box_height + x
-            c_end = (j + 1) * box_height + x
-
-            # Extract the block from the image
-            block = thresh[r_start:r_end, c_start:c_end]
-            box_images.append(block)
-
-    # Display the extracted blocks using matplotlib
-    fig, axes = plt.subplots(9, 9, figsize=(8, 8))
-    plt.suptitle("Sudoku")
-    axes = axes.ravel()
-
-    for idx, ax in enumerate(axes):
-        ax.imshow(box_images[idx], cmap='gray')
-        ax.axis('off')
-
-    plt.tight_layout()
+    # Show the grid lines
+    plt.imshow(grid_lines, cmap='gray')
+    plt.title("Extracted Sudoku Grid Lines")
+    plt.axis('off')
     plt.show()
 
 # Call the function with the image path from the configuration
