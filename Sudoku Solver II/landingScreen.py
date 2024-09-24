@@ -58,6 +58,7 @@ def handle_Screen_events(events, screen):
                 if file_path:
                     confi.uploaded_image = load_image(file_path)
                     confi.file_path = file_path
+                    print(file_path)
                 return "show image"
 
     return "landing screen"
