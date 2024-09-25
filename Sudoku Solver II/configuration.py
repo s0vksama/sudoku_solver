@@ -19,7 +19,7 @@ ls_botton_font_size = 0
 # os image variables
 uploaded_image = None
 file_path = None
-file_path_test = "E:/sublime/GIT python/Test sudokus/image.png"
+file_path_test = "E:/sublime/GIT python/Test sudokus/image4.png"
 # ---------------------------Show image variables------------------------------------------
 
 

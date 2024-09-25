@@ -51,11 +51,19 @@ def image_processing(image_path):
 
     # Extract only the grid lines
     grid_lines = extract_grid_lines(thresh)
+    #inverting the image
+    inverted_binary_image = cv2.bitwise_not(grid_lines)
 
-    # Show the grid lines
-    plt.imshow(grid_lines, cmap='gray')
+    contours, hierarchy = cv2.findContours(inverted_binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    # Draw the contours on the original binary image (optional)
+    contour_image = cv2.cvtColor(inverted_binary_image, cv2.COLOR_GRAY2BGR)  # Convert grayscale to BGR for color drawing
+    cv2.drawContours(contour_image, contours, -1, (0, 255, 0), 2)
+
+    # Show the contour image with matplotlib
+    plt.imshow(cv2.cvtColor(inverted_binary_image, cv2.COLOR_BGR2RGB))  # Convert BGR to RGB for correct display
     plt.title("Extracted Sudoku Grid Lines")
-    plt.axis('off')
+    plt.axis('off')  # Turn off the axis
     plt.show()
 
 # Call the function with the image path from the configuration
