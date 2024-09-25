@@ -57,3 +57,15 @@ plt.imshow(image_numbered)
 plt.title('Numbered Squares')
 plt.axis('off')
 plt.show()
+
+# getting square size
+# Loop through the squares and calculate the size
+square_sizes = []
+for i, square in enumerate(squares):
+    # Get the bounding rectangle of each square
+    x, y, w, h = cv2.boundingRect(square)
+    square_sizes.append((w, h))
+    print(f"Square {i+1}: Width = {w} pixels, Height = {h} pixels")
+
+# Now square_sizes contains the width and height of all detected squares
+
