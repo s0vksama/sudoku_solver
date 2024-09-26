@@ -1,9 +1,13 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+import configuration as confi
+import pytesseract
 
 def image_processing(image):
-    # image = cv2.imread(path)
+    old_image = cv2.imread(confi.file_path)
+
+    board = [[0 for _ in range(9)] for _ in range(9)]
     # Convert to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
@@ -65,20 +69,34 @@ def image_processing(image):
 
         # Get the bounding box for the square
         x, y, w, h = cv2.boundingRect(square)
+        w_p =int(w*0.05)  #width percent
+        h_p =int(h*0.05)  #width percent
 
         # Position for the number (slightly above the top-left corner of the bounding box)
         text_position = (x, y+20)
 
         # Put the number on the image
         cv2.putText(filtered_image, str(i + 1), text_position, cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
+
+        show_image = old_image[y+h_p:y+h-h_p, x+w_p:x+w-w_p]
+
+        ff, show_image = cv2.threshold(show_image, 128, 255, cv2.THRESH_BINARY_INV)
+
+        if i <15:
+            plt.imshow(show_image)
+            plt.show()
+
+        digit = pytesseract.image_to_string(show_image, config='--psm 10 digits')
+        digit = digit.strip()
+
+        if not digit.isdigit():
+            digit = 0
+
+        print(digit)
+        board[i//9][i%9] = digit
+
+    for b in board:
+        print(b)
+
     return filtered_image
 
-# # Load the image
-# image = cv2.imread('contour_image.jpg')
-
-# ans = image_processing(image)
-
-# # Display the image with the numbered squares
-# plt.imshow(cv2.cvtColor(ans, cv2.COLOR_BGR2RGB))
-# plt.title('Filtered and Numbered Squares')
-# plt.show()
