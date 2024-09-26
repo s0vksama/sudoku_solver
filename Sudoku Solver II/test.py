@@ -25,6 +25,8 @@ for contour in contours:
     if len(approx) == 4:
         squares.append(approx)
 
+print(squares)
+
 # Draw the contours (for visualization)
 cv2.drawContours(image, squares, -1, (0, 255, 0), 3)
 # Convert the image from BGR to RGB for matplotlib
@@ -65,7 +67,19 @@ for i, square in enumerate(squares):
     # Get the bounding rectangle of each square
     x, y, w, h = cv2.boundingRect(square)
     square_sizes.append((w, h))
-    print(f"Square {i+1}: Width = {w} pixels, Height = {h} pixels")
+    # print(f"Square {i+1}: Width = {w} pixels, Height = {h} pixels")
+
+def my_median(square_sizes):
+    square_sizes = np.array(square_sizes)
+    # Separate x and y coordinates
+    x_coords = square_sizes[:, 0]
+    y_coords = square_sizes[:, 1]
+    # Compute the median for x and y coordinates
+    median_x = np.median(x_coords)
+    median_y = np.median(y_coords)
+    # Median of the 2D points
+    median_point = (median_x, median_y)
+    return median_point
 
 # Now square_sizes contains the width and height of all detected squares
 

@@ -60,11 +60,5 @@ def image_processing(image_path):
     contour_image = cv2.cvtColor(inverted_binary_image, cv2.COLOR_GRAY2BGR)  # Convert grayscale to BGR for color drawing
     cv2.drawContours(contour_image, contours, -1, (0, 255, 0), 2)
 
-    # Show the contour image with matplotlib
-    plt.imshow(cv2.cvtColor(inverted_binary_image, cv2.COLOR_BGR2RGB))  # Convert BGR to RGB for correct display
-    plt.title("Extracted Sudoku Grid Lines")
-    plt.axis('off')  # Turn off the axis
-    plt.show()
+    return cv2.cvtColor(inverted_binary_image, cv2.COLOR_GRAY2RGB)
 
-# Call the function with the image path from the configuration
-image_processing(confi.file_path_test)
