@@ -78,25 +78,38 @@ def image_processing(image):
         # Put the number on the image
         cv2.putText(filtered_image, str(i + 1), text_position, cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
 
-        show_image = old_image[y+h_p:y+h-h_p, x+w_p:x+w-w_p]
+        tshow_image = old_image[y+h_p:y+h-h_p, x+w_p:x+w-w_p]
 
-        ff, show_image = cv2.threshold(show_image, 128, 255, cv2.THRESH_BINARY_INV)
+        ff, show_image = cv2.threshold(tshow_image, 128, 255, cv2.THRESH_BINARY_INV)
 
-        if i <15:
-            plt.imshow(show_image)
-            plt.show()
+
+
+        # if i <15:
+        #     plt.imshow(show_image)
+        #     plt.show()
 
         digit = pytesseract.image_to_string(show_image, config='--psm 10 digits')
         digit = digit.strip()
 
-        if not digit.isdigit():
-            digit = 0
+        if not digit.isdigit() or digit == '0':
+            # Define the kernel for erosion (3x3 rectangular kernel in this example)
+            kernel = np.ones((3, 3), np.uint8)
 
+            # Apply erosion
+            show_image = cv2.erode(show_image, kernel, iterations=1)
+
+            digit = pytesseract.image_to_string(show_image, config='--psm 10 digits')
+            digit = digit.strip()
+
+            if not digit.isdigit() or digit == '0':
+                digit = pytesseract.image_to_string(tshow_image, config='--psm 10 digits')
+                digit = digit.strip()
+
+                if not digit.isdigit():
+                    digit = 0
         print(digit)
-        board[i//9][i%9] = digit
-
+        board[8 -(i//9)][8-(i%9)] = digit
     for b in board:
         print(b)
 
     return filtered_image
-
