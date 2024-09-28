@@ -21,7 +21,13 @@ uploaded_image = None
 file_path = None
 file_path_test = "E:/sublime/GIT python/Test sudokus/image4.png"
 # ---------------------------Show image variables------------------------------------------
+Sibotton_width = 200
+Sibotton_hight = 80
+Sibotton_x = (screen_width-Sibotton_width)//2
+Sibotton_y = 575
 
+processed_image = []
+BOARD = []
 
 #
 

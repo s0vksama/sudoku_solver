@@ -5,8 +5,10 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import configuration as confi
+import configuration2 as confi2
 import pytesseract
 
+font = pygame.font.Font(None, 50)
 def plot_image(image):
     plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
     plt.title('Detected Numbers with Rectangles')
@@ -46,8 +48,8 @@ def get_digit(old_image, x, y, w, h, tol):
     return digit
 
 
-def image_processing(image, screen):
-    screen.fill(confi.lsbackground_col)
+def image_processing(image, screen, events):
+
     pygame.display.flip()
     c_old_image = cv2.imread(confi.file_path)
     old_image = cv2.cvtColor(c_old_image, cv2.COLOR_BGR2GRAY)
@@ -109,6 +111,7 @@ def image_processing(image, screen):
     filtered_image = image.copy()
 
     for i, square in enumerate(filtered_squares):
+        screen.fill(confi.lsbackground_col)
         # Draw the contour
         cv2.drawContours(filtered_image, [square], -1, (0, 255, 0), 3)
 
@@ -128,8 +131,20 @@ def image_processing(image, screen):
         # print(digit)
         board[8 -(i//9)][8-(i%9)] = digit
 
+        percent = str(int(i*100/81))
+
+        text_UPLOAD = font.render("PROCESSING", True, (149, 121, 104))  # First pair "S U"
+        text_UPLOAD_PERCENT = font.render("{} %".format(percent), True, (149, 121, 104))  # Second pair "D O"
         # upload scrren
-        pygame.draw.rect(screen, (0,0,0), (100, 300, i*5, 30))
+        UPLOAD_rect = text_UPLOAD .get_rect(center=(300, 250))
+        UPLOAD_PERCENT_rect = text_UPLOAD_PERCENT.get_rect(center=(300, 375))
+
+        pygame.draw.rect(screen, (194, 207, 215), (99, 299, 80*5, 32))
+        pygame.draw.rect(screen, (149, 121, 104), (100, 300, i*5, 30))
+
+        screen.blit(text_UPLOAD, UPLOAD_rect)
+        screen.blit(text_UPLOAD_PERCENT, UPLOAD_PERCENT_rect)
         pygame.display.flip()
 
+    confi2.sudoku_board = board
     return c_old_image

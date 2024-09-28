@@ -29,13 +29,14 @@ def main():
 
         elif current_screen == "show image":
             current_screen = Si.handle_Screen_events(events, screen)
-            Si.draw_Screen(screen)
+            Si.draw_Screen(screen, events)
 
         elif current_screen == "show sudoku":
             current_screen = Ss.handle_Screen_events(events, screen)
             Ss.draw_Screen(screen)
 
         elif current_screen == "animation":
+            print("animation")
             current_screen = ani.handle_landingScreen_events(events, screen)
             ani.draw_showSudoku_Screen(screen)
 
