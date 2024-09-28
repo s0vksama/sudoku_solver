@@ -84,10 +84,11 @@ def imageProcessing(path):
     output_image_rgb = cv2.cvtColor(output_image, cv2.COLOR_BGR2RGB)
 
     # Display the final image with rectangles around the numbers
-    # plt.imshow(cv2.cvtColor(output_image, cv2.COLOR_BGR2RGB))
-    # plt.title('Detected Numbers with Rectangles')
-    # plt.axis('off')
-    # plt.show()
+    plt.imshow(cv2.cvtColor(binary_image, cv2.COLOR_BGR2RGB))
+    plt.title('Detected Numbers with Rectangles')
+    plt.axis('off')
+    plt.show()
+
     confi.sudoku_board = sudoku_grid
     print(confi.sudoku_board)
     return output_image_rgb

@@ -1,11 +1,56 @@
+import pygame
+pygame.init()
+
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import configuration as confi
 import pytesseract
 
-def image_processing(image):
-    old_image = cv2.imread(confi.file_path)
+def plot_image(image):
+    plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+    plt.title('Detected Numbers with Rectangles')
+    plt.axis('off')
+    plt.show()
+
+def get_digit(old_image, x, y, w, h, tol):
+    w_p =int(w*tol)  #width percent
+    h_p =int(h*tol)  #width percent
+
+    tshow_image = old_image[y+h_p:y+h-h_p, x+w_p:x+w-w_p]
+
+    digit = pytesseract.image_to_string(tshow_image, config='--psm 6 digits')
+    digit = digit.strip()
+
+    if not digit.isdigit() or digit == '0':
+        ff, show_image = cv2.threshold(tshow_image, 128, 255, cv2.THRESH_BINARY_INV)
+
+        digit = pytesseract.image_to_string(show_image, config='--psm 10 digits')
+        digit = digit.strip()
+
+        if not digit.isdigit() or digit == '0':
+            # Define the kernel for erosion (3x3 rectangular kernel in this example)
+            kernel = np.ones((3, 3), np.uint8)
+
+            # Apply erosion
+            show_image = cv2.erode(show_image, kernel, iterations=1)
+            digit = pytesseract.image_to_string(show_image, config='--psm 10 digits')
+            digit = digit.strip()
+
+    if len(digit) >1:
+        digit = get_digit(old_image, x, y, w, h, tol*2)
+
+    if not digit.isdigit():
+        digit = 0
+
+    return digit
+
+
+def image_processing(image, screen):
+    screen.fill(confi.lsbackground_col)
+    pygame.display.flip()
+    c_old_image = cv2.imread(confi.file_path)
+    old_image = cv2.cvtColor(c_old_image, cv2.COLOR_BGR2GRAY)
 
     board = [[0 for _ in range(9)] for _ in range(9)]
     # Convert to grayscale
@@ -69,47 +114,22 @@ def image_processing(image):
 
         # Get the bounding box for the square
         x, y, w, h = cv2.boundingRect(square)
-        w_p =int(w*0.05)  #width percent
-        h_p =int(h*0.05)  #width percent
 
         # Position for the number (slightly above the top-left corner of the bounding box)
-        text_position = (x, y+20)
+        text_position = (x+10, y+30)
 
-        # Put the number on the image
-        cv2.putText(filtered_image, str(i + 1), text_position, cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
+        digit = get_digit(old_image, x, y, w, h, 0.05)
 
-        tshow_image = old_image[y+h_p:y+h-h_p, x+w_p:x+w-w_p]
+        if digit == 0:
+            cv2.putText(c_old_image, str(digit), text_position, cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
 
-        ff, show_image = cv2.threshold(tshow_image, 128, 255, cv2.THRESH_BINARY_INV)
-
-
-
-        # if i <15:
-        #     plt.imshow(show_image)
-        #     plt.show()
-
-        digit = pytesseract.image_to_string(show_image, config='--psm 10 digits')
-        digit = digit.strip()
-
-        if not digit.isdigit() or digit == '0':
-            # Define the kernel for erosion (3x3 rectangular kernel in this example)
-            kernel = np.ones((3, 3), np.uint8)
-
-            # Apply erosion
-            show_image = cv2.erode(show_image, kernel, iterations=1)
-
-            digit = pytesseract.image_to_string(show_image, config='--psm 10 digits')
-            digit = digit.strip()
-
-            if not digit.isdigit() or digit == '0':
-                digit = pytesseract.image_to_string(tshow_image, config='--psm 10 digits')
-                digit = digit.strip()
-
-                if not digit.isdigit():
-                    digit = 0
-        print(digit)
+        else:
+            cv2.putText(c_old_image, str(digit), text_position, cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+        # print(digit)
         board[8 -(i//9)][8-(i%9)] = digit
-    for b in board:
-        print(b)
 
-    return filtered_image
+        # upload scrren
+        pygame.draw.rect(screen, (0,0,0), (100, 300, i*5, 30))
+        pygame.display.flip()
+
+    return c_old_image
