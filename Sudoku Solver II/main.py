@@ -36,7 +36,6 @@ def main():
             Ss.draw_Screen(screen)
 
         elif current_screen == "animation":
-            print("animation")
             current_screen = ani.handle_landingScreen_events(events, screen)
             ani.draw_showSudoku_Screen(screen)
 

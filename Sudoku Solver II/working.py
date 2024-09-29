@@ -129,7 +129,7 @@ def image_processing(image, screen, events):
         else:
             cv2.putText(c_old_image, str(digit), text_position, cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
         # print(digit)
-        board[8 -(i//9)][8-(i%9)] = digit
+        board[8 -(i//9)][8-(i%9)] = int(digit)
 
         percent = str(int(i*100/81))
 
