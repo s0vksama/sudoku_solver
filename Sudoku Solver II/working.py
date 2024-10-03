@@ -115,4 +115,5 @@ def image_processing(image, screen, events):
         pygame.display.flip()
 
     confi2.sudoku_board = board
+    print(confi2.sudoku_board)
     return c_old_image
