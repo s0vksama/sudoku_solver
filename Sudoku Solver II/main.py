@@ -9,6 +9,10 @@ import landingScreen as Ls
 import showImage as Si
 import showSudoku as Ss
 import animation as ani
+from HOG_and_SVM_confidence import SVM_classifier, SVM_single
+import Get_digit_confi as Gd
+import sudoku_extractor as Se
+import cv2
 
 screen = pygame.display.set_mode((confi.screen_width, confi.screen_height))
 pygame.display.set_caption("sudoku solver")

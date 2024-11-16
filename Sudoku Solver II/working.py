@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import configuration as confi
 import configuration2 as confi2
 import pytesseract
+# import HOG_digit as Hd
 
 # Pygame initialization
 pygame.init()
@@ -22,24 +23,26 @@ def get_digit(old_image, x, y, w, h, tol):
 
     tshow_image = old_image[y+h_p:y+h-h_p, x+w_p:x+w-w_p]
 
-    # Single call to Pytesseract after initial preprocessing
-    digit = pytesseract.image_to_string(tshow_image, config='--psm 6 digits').strip()
+    # # Single call to Pytesseract after initial preprocessing
+    # digit = pytesseract.image_to_string(tshow_image, config='--psm 6 digits').strip()
 
-    if not digit.isdigit() or digit == '0':
-        # Apply binary thresholding once instead of multiple times
-        _, show_image = cv2.threshold(tshow_image, 128, 255, cv2.THRESH_BINARY_INV)
-        digit = pytesseract.image_to_string(show_image, config='--psm 10 digits').strip()
+    # if not digit.isdigit() or digit == '0':
+    #     # Apply binary thresholding once instead of multiple times
+    #     _, show_image = cv2.threshold(tshow_image, 128, 255, cv2.THRESH_BINARY_INV)
+    #     digit = pytesseract.image_to_string(show_image, config='--psm 10 digits').strip()
 
-        if not digit.isdigit() or digit == '0':
-            # Use erosion to preprocess the image further
-            kernel = np.ones((3, 3), np.uint8)
-            show_image = cv2.erode(show_image, kernel, iterations=1)
-            digit = pytesseract.image_to_string(show_image, config='--psm 10 digits').strip()
+    #     if not digit.isdigit() or digit == '0':
+    #         # Use erosion to preprocess the image further
+    #         kernel = np.ones((3, 3), np.uint8)
+    #         show_image = cv2.erode(show_image, kernel, iterations=1)
+    #         digit = pytesseract.image_to_string(show_image, config='--psm 10 digits').strip()
 
-    if len(digit) > 1:
-        return get_digit(old_image, x, y, w, h, tol * 2)
+    # if len(digit) > 1:
+    #     return get_digit(old_image, x, y, w, h, tol * 2)
+    # return digit if digit.isdigit() else '0'
 
-    return digit if digit.isdigit() else '0'
+    digit = Hd.predict_image(tshow_image)
+    return digit
 
 def image_processing(image, screen, events):
     pygame.display.flip()

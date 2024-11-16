@@ -5,6 +5,8 @@ import numpy as np
 import working as wk
 import configuration as confi
 import ImageProcessing as iP
+import Get_digit as Gd
+import sudoku_extractor as Se
 
 font = pygame.font.Font(None, 36) #using default font
 fontBold = pygame.font.Font(None, 100)
@@ -41,8 +43,8 @@ def handle_Screen_events(events, screen):
 
 def draw_Screen(screen, events):
     if len(confi.processed_image) ==0 :
-        my_image = iP.image_processing(confi.file_path)
-        my_image = wk.image_processing(my_image, screen, events)
+        my_image = Se.Sudoku_Extractor(confi.file_path)
+        # my_image = wk.image_processing(my_image, screen, events)
 
         output_image_rgb = np.array(my_image)
         output_image_rgb = np.transpose(output_image_rgb, (1, 0, 2))  # Swap axes if needed
