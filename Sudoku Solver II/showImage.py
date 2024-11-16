@@ -1,12 +1,13 @@
 import pygame
 pygame.init()
 
+import cv2
 import numpy as np
 import working as wk
 import configuration as confi
 import ImageProcessing as iP
 import Get_digit as Gd
-import sudoku_extractor as Se
+import sudoku_extractor_new as Se
 
 font = pygame.font.Font(None, 36) #using default font
 fontBold = pygame.font.Font(None, 100)
@@ -43,7 +44,8 @@ def handle_Screen_events(events, screen):
 
 def draw_Screen(screen, events):
     if len(confi.processed_image) ==0 :
-        my_image = Se.Sudoku_Extractor(confi.file_path)
+        image = cv2.imread(confi.file_path)
+        my_image = Se.process_and_display_cropped_sudoku(image)
         # my_image = wk.image_processing(my_image, screen, events)
 
         output_image_rgb = np.array(my_image)

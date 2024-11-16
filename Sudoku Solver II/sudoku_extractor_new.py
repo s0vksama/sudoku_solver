@@ -21,14 +21,14 @@ def process_and_display_cropped_sudoku(image):
             x, y, w, h = cv2.boundingRect(largest_contour)
 
             # Crop the image to the bounding box
-            cropped_cell = cell_gray[y:y+h, x:x+w]
+            cropped_cell = cell_gray[y+3:y+h-5, x+3:x+w-5]
 
             # Resize the cropped image to the desired dimensions
             cropped_cell = cv2.resize(cropped_cell, resize_dim)
 
             return cropped_cell
         else:
-            return cell_gray
+            return cv2.resize(cell_gray, resize_dim)
 
     def preprocess(image):
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -86,13 +86,17 @@ def process_and_display_cropped_sudoku(image):
         warped_with_numbers = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
         warped_with_numbers = cv2.cvtColor(warped_with_numbers, cv2.COLOR_GRAY2BGR)
 
+        # # Plotting the cropped images
+        # fig, axs = plt.subplots(9, 9, figsize=(10, 10))
+        # fig.suptitle('Cropped Sudoku Cells', fontsize=16)
+
         for i in range(9):
             for j in range(9):
                 cell_gray = cv2.cvtColor(cells[i * 9 + j], cv2.COLOR_BGR2GRAY)
-                cell_gray = crop_number(cell_gray)
+                cropped_cell = crop_number(cell_gray)
 
                 try:
-                    prediction = Gd.predict_image(cell_gray)
+                    prediction = Gd.predict_image(cropped_cell)
                     sudoku_array[i, j] = prediction
 
                     # Draw the prediction at the center of each cell
@@ -103,20 +107,22 @@ def process_and_display_cropped_sudoku(image):
                     print(f"Error processing cell at ({i}, {j}): {e}")
                     sudoku_array[i, j] = -1  # Mark invalid cells
 
+        #         # Display the cropped cell in the grid
+        #         axs[i, j].imshow(cropped_cell, cmap='gray')
+        #         axs[i, j].axis('off')
+
+        # plt.show()
+
         # Print the Sudoku grid
         print("Recognized Sudoku Grid:")
         print(sudoku_array)
-        return sudoku_array, warped_with_numbers
+        config.sudoku_board = sudoku_array
+        return warped_with_numbers
     else:
         print("No Sudoku grid detected.")
         return None
 
 
-def Sudoku_Extractor(image_path):
-    # image_path = 'test (4).jpeg'
-    image = cv2.imread(image_path)
-    image = cv2.resize(image, (450, 450))  # Resize for consistency
-    sudoku_array, sudoku_with_numbers = process_and_display_cropped_sudoku(image)
-    config.sudoku_board = sudoku_array
-    return sudoku_with_numbers
-
+# image_path = "E:/sublime/GIT python/Test sudokus/hardest2.png"
+# image = cv2.imread(image_path)
+# process_and_display_cropped_sudoku(image)

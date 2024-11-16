@@ -284,6 +284,8 @@ def backtrack(screen):
 def solve_sudoku_animated(screen):
     obvious(screen)
     backtrack(screen)
+    obvious(screen)
+    backtrack(screen)
 
 def handle_landingScreen_events(events, screen):
     global stop_solver

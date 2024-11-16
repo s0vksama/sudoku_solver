@@ -70,3 +70,4 @@ solved_set = set()
 delay = 0.05 #animation delay
 
 sudoku_board = []
+AImodel = None

@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import configuration2 as confi
 from HOG_and_SVM_confidence import SVM_classifier, SVM_single
 
 # Function to compute gradients
@@ -50,15 +51,17 @@ def hog_descriptor(image, cell_size=8, bin_size=20, block_size=2):
 
 # Main Prediction Function
 def main_predict():
-    # Load the trained SVM model
-    model_path = "svm_number_model_confidence_hand.pkl"
-    try:
-        loaded_svm = joblib.load(model_path)
-        print("Model loaded successfully.")
-    except FileNotFoundError:
-        print("Error: Model file not found. Please check the model path.")
-        return
-
+    if confi.AImodel is None:
+        # Load the trained SVM model
+        model_path = "svm_number_model_confidence_hand.pkl"
+        try:
+            loaded_svm = joblib.load(model_path)
+            confi.AImodel = loaded_svm
+            print("Model loaded successfully.")
+        except FileNotFoundError:
+            print("Error: Model file not found. Please check the model path.")
+            return
+    loaded_svm = confi.AImodel
     images = []
     predictions = []
     confidences = []
@@ -101,14 +104,16 @@ def main_predict():
 
 # Function for predicting a single image
 def predict_image(image):
-    model_path = "svm_number_model_confidence_hand.pkl"
-    try:
-        loaded_svm = joblib.load(model_path)
-        print("Model loaded successfully.")
-    except FileNotFoundError:
-        print("Error: Model file not found. Please check the model path.")
-        return
-
+    if confi.AImodel is None:
+        model_path = "svm_number_model_confidence_hand.pkl"
+        try:
+            loaded_svm = joblib.load(model_path)
+            confi.AImodel = loaded_svm
+            print("Model loaded successfully.")
+        except FileNotFoundError:
+            print("Error: Model file not found. Please check the model path.")
+            return
+    loaded_svm = confi.AImodel
     # Resize and extract HOG features
     image = cv2.resize(image, (64, 128))
     hog_features = hog_descriptor(image)

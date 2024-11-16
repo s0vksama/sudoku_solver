@@ -11,7 +11,7 @@ import showSudoku as Ss
 import animation as ani
 from HOG_and_SVM_confidence import SVM_classifier, SVM_single
 import Get_digit_confi as Gd
-import sudoku_extractor as Se
+import sudoku_extractor_new as Se
 import cv2
 
 screen = pygame.display.set_mode((confi.screen_width, confi.screen_height))
@@ -47,4 +47,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
